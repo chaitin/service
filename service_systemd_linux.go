@@ -243,7 +243,7 @@ StandardOutput=file:/var/log/{{.Name}}.out
 StandardError=file:/var/log/{{.Name}}.err
 {{- end}}
 Restart=always
-RestartSec=120
+RestartSec=1
 EnvironmentFile=-/etc/sysconfig/{{.Name}}
 
 [Install]
