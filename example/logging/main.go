@@ -7,10 +7,9 @@ package main
 
 import (
 	"flag"
+	"github.com/chaitin/service"
 	"log"
 	"time"
-
-	"github.com/kardianos/service"
 )
 
 var logger service.Logger

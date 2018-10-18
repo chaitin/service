@@ -18,7 +18,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/kardianos/service"
+	"github.com/chaitin/service"
 )
 
 const runAsServiceArg = "RunThisAsService"

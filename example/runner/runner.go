@@ -14,8 +14,8 @@ import (
 	"os/exec"
 	"path/filepath"
 
+	"github.com/chaitin/service"
 	"github.com/kardianos/osext"
-	"github.com/kardianos/service"
 )
 
 // Config is the runner app config structure.
