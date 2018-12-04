@@ -5,6 +5,8 @@
 package service
 
 import (
+	"errors"
+	"fmt"
 	"os"
 	"strings"
 )
@@ -72,4 +74,22 @@ var tf = map[string]interface{}{
 	"cmdEscape": func(s string) string {
 		return strings.Replace(s, " ", `\x20`, -1)
 	},
+}
+
+// TODO: Bad code with bad name and bad smell
+func UpdateServicePathWorker(s Service) error {
+	theService, ok := s.(*systemd)
+	if !ok {
+		return errors.New("don't catch this, fix it")
+	}
+
+	if err := theService.Uninstall(); err != nil {
+		errorMessage := fmt.Sprintf("failed to uninstall old service: %s", err.Error())
+		return errors.New(errorMessage)
+	} else if err := theService.Install(); err != nil {
+		errorMessage := fmt.Sprintf("failed to install new service: %s", err.Error())
+		return errors.New(errorMessage)
+	} else {
+		return nil
+	}
 }

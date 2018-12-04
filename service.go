@@ -88,6 +88,11 @@ const (
 	optionLaunchdConfig = "LaunchdConfig"
 )
 
+const (
+	SystemdServiceName = "linux-systemd"
+	WindowsServiceName = "windows-service"
+)
+
 // Status represents service status as an byte value
 type Status byte
 
@@ -147,7 +152,8 @@ var (
 	// ErrNoServiceSystemDetected is returned when no system was detected.
 	ErrNoServiceSystemDetected = errors.New("No service system detected.")
 	// ErrNotInstalled is returned when the service is not installed
-	ErrNotInstalled = errors.New("the service is not installed")
+	ErrNotInstalled       = errors.New("the service is not installed")
+	ErrNotSupportedSystem = errors.New("this init system isn't supported by Chaitin Tech")
 )
 
 // New creates a new service based on a service interface and configuration.
@@ -158,6 +164,10 @@ func New(i Interface, c *Config) (Service, error) {
 	if system == nil {
 		return nil, ErrNoServiceSystemDetected
 	}
+	if system.String() != SystemdServiceName && system.String() != WindowsServiceName {
+		return nil, ErrNotSupportedSystem
+	}
+
 	return system.New(i, c)
 }
 
@@ -390,4 +400,14 @@ type Logger interface {
 	Errorf(format string, a ...interface{}) error
 	Warningf(format string, a ...interface{}) error
 	Infof(format string, a ...interface{}) error
+}
+
+// TODO: Bad code with bad name and bad smell
+// UpdateServicePath update service by name
+func UpdateServicePath(s Service) error {
+	if s.Platform() != SystemdServiceName && s.Platform() != WindowsServiceName {
+		return ErrNotSupportedSystem
+	}
+
+	return UpdateServicePathWorker(s)
 }

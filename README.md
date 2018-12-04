@@ -13,3 +13,7 @@ DO NOT IMPORT THIS BY HAND !!!
 This project is licensed under the terms of the MIT license.
 
 [origin license](./LICENSE)
+
+## Modify points
+
++ Service can update exec path by itself(Windows and Systemd)

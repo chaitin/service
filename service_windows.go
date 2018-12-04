@@ -444,3 +444,30 @@ func (ws *windowsService) SystemLogger(errs chan<- error) (Logger, error) {
 	}
 	return WindowsLogger{el, errs}, nil
 }
+
+// TODO: Bad code with bad name and bad smell
+func UpdateServicePathWorker(serviceInterface Service) error {
+	ws, ok := serviceInterface.(*windowsService)
+	if !ok {
+		panic("don't catch this, fix it")
+	}
+
+	m, err := mgr.Connect()
+	if err != nil {
+		return err
+	}
+	defer m.Disconnect()
+
+	s, err := m.OpenService(ws.Name)
+	if err != nil {
+		return err
+	}
+
+	config, err := s.Config()
+	config.BinaryPathName, _ = ws.execPath()
+	if err = s.UpdateConfig(config); err != nil {
+		return err
+	}
+
+	return err
+}
