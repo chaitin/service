@@ -208,6 +208,8 @@ func (s *systemd) Status() (Status, error) {
 		return StatusStopped, nil
 	case strings.HasPrefix(out, "failed"):
 		return StatusUnknown, errors.New("service in failed state")
+	case strings.HasPrefix(out, "activating"):
+		return StatusUnknown, errors.New("service is activating")
 	default:
 		return StatusUnknown, ErrNotInstalled
 	}
